@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bakong QR Payment</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .error { color: #dc2626; }
+    .success { color: #16a34a; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-md mx-auto bg-white p-8 rounded shadow">
+    <h2 class="text-2xl font-bold mb-6 text-center">Bakong QR Payment</h2>
+
+    <div class="mb-4">
+      <label for="merchantId" class="block text-sm font-medium text-gray-700">Merchant ID</label>
+      <input
+        type="text"
+        id="merchantId"
+        placeholder="Enter Merchant ID"
+        class="mt-1 block w-full border p-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="amount" class="block text-sm font-medium text-gray-700">Amount</label>
+      <input
+        type="number"
+        id="amount"
+        placeholder="Enter amount"
+        min="0.01"
+        step="0.01"
+        class="mt-1 block w-full border p-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="currency" class="block text-sm font-medium text-gray-700">Currency</label>
+      <select
+        id="currency"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="KHR">KHR (៛)</option>
+        <option value="USD">USD ($)</option>
+      </select>
+    </div>
+
+    <button
+      id="submitBtn"
+      class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700"
+    >
+      Generate QR
+    </button>
+
+    <div id="message" class="mt-4 text-center hidden"></div>
+
+    <div id="qrCodeContainer" class="mt-6 hidden text-center">
+      <h3 class="text-lg font-semibold mb-2">Scan this QR Code</h3>
+      <img id="qrCodeImage" alt="QR Code" class="mx-auto max-w-full h-auto" />
+    </div>
+
+    <div id="transactionDetails" class="mt-4 hidden text-sm bg-gray-50 p-3 rounded">
+      <p><strong>Transaction ID:</strong> <span id="transactionId"></span></p>
+      <p><strong>Amount:</strong> <span id="transactionAmount"></span></p>
+      <p><strong>Status:</strong> <span id="transactionStatus">Pending</span></p>
+    </div>
+  </div>
+
+  <script>
+    const merchantIdInput = document.getElementById('merchantId');
+    const amountInput = document.getElementById('amount');
+    const currencyInput = document.getElementById('currency');
+    const submitBtn = document.getElementById('submitBtn');
+    const messageDiv = document.getElementById('message');
+    const qrCodeContainer = document.getElementById('qrCodeContainer');
+    const qrCodeImage = document.getElementById('qrCodeImage');
+    const transactionDetails = document.getElementById('transactionDetails');
+    const transactionIdSpan = document.getElementById('transactionId');
+    const transactionAmountSpan = document.getElementById('transactionAmount');
+    const transactionStatusSpan = document.getElementById('transactionStatus');
+
+    function showMessage(message, type = 'error') {
+      messageDiv.textContent = message;
+      messageDiv.className = `mt-4 text-center ${type}`;
+      messageDiv.classList.remove('hidden');
+    }
+
+    function clearMessage() {
+      messageDiv.textContent = '';
+      messageDiv.classList.add('hidden');
+    }
+
+    submitBtn.addEventListener('click', async () => {
+      clearMessage();
+
+      const merchantId = merchantIdInput.value.trim();
+      const amount = parseFloat(amountInput.value);
+      const currency = currencyInput.value;
+
+      if (!merchantId) {
+        showMessage('Merchant ID is required.', 'error');
+        return;
+      }
+      if (isNaN(amount) || amount <= 0) {
+        showMessage('Please enter a valid amount greater than 0.', 'error');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Generating QR Code...';
+
+      try {
+        const res = await fetch('/api/payment/initiate-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ merchantId, amount, currency }),
+        });
+
+        const response = await res.json();
+
+        if (!res.ok || response.error || !response.data || !response.data.qrCodeUrl) {
+          throw new Error(response.error || 'Failed to generate QR code');
+        }
+
+        // Set image source to base64 QR code string
+        qrCodeImage.src = response.data.qrCodeUrl;
+        transactionIdSpan.textContent = response.data.transactionId;
+        transactionAmountSpan.textContent = `${amount.toFixed(2)} ${currency}`;
+        transactionStatusSpan.textContent = 'Pending';
+
+        qrCodeContainer.classList.remove('hidden');
+        transactionDetails.classList.remove('hidden');
+        showMessage('QR Code generated successfully!', 'success');
+      } catch (err) {
+        showMessage(err.message || 'An unexpected error occurred.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Generate QR';
+      }
+    });
+  </script>
+</body>
+</html>
