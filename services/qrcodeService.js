@@ -1,6 +1,3 @@
-
-
-
 // services/qrcodeService.js
 const axios = require('axios');
 const QRCode = require('qrcode');

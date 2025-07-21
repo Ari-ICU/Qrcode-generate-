@@ -1,4 +1,3 @@
-// controllers/qrcodeController.js
 const { initiatePayment, verifyPayment } = require('../services/qrcodeService');
 
 class QrCodeController {
@@ -18,17 +17,10 @@ class QrCodeController {
         error: null,
       });
     } catch (error) {
-      console.error('Error in initiatePaymentController:', {
-        message: error.message,
-        code: error.code,
-        stack: error.stack,
-      });
-
+      console.error('Error in initiatePaymentController:', error);
       return res.status(500).json({
         error: 'Failed to initiate payment',
-        details: error.message.includes('ENOTFOUND')
-          ? `Cannot connect to Bakong API: ${error.message}`
-          : error.message,
+        details: error.message,
       });
     }
   }
@@ -49,17 +41,10 @@ class QrCodeController {
         error: null,
       });
     } catch (error) {
-      console.error('Error in verifyPaymentController:', {
-        message: error.message,
-        code: error.code,
-        stack: error.stack,
-      });
-
+      console.error('Error in verifyPaymentController:', error);
       return res.status(error.message === 'Transaction not found' ? 404 : 500).json({
-        error: error.message === 'Transaction not found' ? 'Transaction not found' : 'Failed to verify payment',
-        details: error.message.includes('ENOTFOUND')
-          ? `Cannot connect to Bakong API: ${error.message}`
-          : error.message,
+        error: error.message,
+        details: error.message,
       });
     }
   }
