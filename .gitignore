@@ -1,0 +1,46 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# RSA keys and other secrets
+*.key
+*.pem
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Mac system files
+.DS_Store
+
+# Redis dump files (if any)
+dump.rdb
+
+# VS Code settings (optional)
+.vscode/
+
+# Coverage reports
+coverage/
+
+# Temporary files
+tmp/
+temp/

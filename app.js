@@ -12,15 +12,12 @@ app.use(express.json());
 app.use(express.static('public')); // Serve static files (e.g., index.html)
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/bakong_payment', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/bakong_payment')
   .then(() => console.log(chalk.green('Connected to MongoDB')))
   .catch((err) => console.error(chalk.red('MongoDB connection error:', err)));
 
 // Routes
-app.use('/api/payment', paymentRoutes);
+app.use('/api', paymentRoutes);
 
 // Get network interfaces for external access
 const getNetworkAddress = () => {
@@ -39,7 +36,7 @@ const getNetworkAddress = () => {
 const PORT = process.env.PORT || 3000;
 const HOST = '0.0.0.0'; // Bind to all interfaces
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
-const BASE_URL = ENVIRONMENT === 'production' ? process.env.APP_URL || 'your-production-domain.com' : 'localhost';
+// const BASE_URL = ENVIRONMENT === 'production' ? process.env.APP_URL || 'your-production-domain.com' : 'localhost';
 
 app.listen(PORT, HOST, () => {
   const localUrl = `http://localhost:${PORT}`;
