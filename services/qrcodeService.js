@@ -26,7 +26,7 @@ class QrCodeService {
       const pubKey = publicKeyId || '';
       const payOpt = paymentOption || '';
 
-      const payload = `${tran_id}${req_time}${merchant_id}${formattedAmount}${currency}${payOpt}${desc}${pubKey}`;
+      const payload = `${tran_id}|${req_time}|${merchant_id}|${formattedAmount}|${currency}|${payOpt}|${desc}|${pubKey}`;
 
       console.log('Signature Input:', {
         tran_id,

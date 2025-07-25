@@ -18,6 +18,7 @@ pids/
 .env
 .env.local
 .env.*.local
+*.env
 
 # RSA keys and other secrets
 *.key
