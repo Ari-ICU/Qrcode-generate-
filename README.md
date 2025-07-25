@@ -68,7 +68,7 @@ http://localhost:3000
 API ENDPOINTS
 
 1. Initiate Payment
-POST /api/payment/initiate-payment
+POST /api/purchase
 Body:
 {
   "merchantId": "your_merchant_id",
@@ -84,7 +84,7 @@ Response:
 }
 
 2. Verify Payment
-GET /api/payment/verify-payment/:transactionId
+GET /api/verify-payment/:transactionId
 Response:
 {
   "transactionId": "64adf23e4c1b0a001f2e1d2a",
@@ -94,16 +94,16 @@ Response:
 }
 
 3. Retrieve Transactions
-GET /api/payment/transactions
+GET /api/transactions
 
 4. Retrieve Single Transaction
-GET /api/payment/transaction/:transactionId
+GET /api/transaction/:transactionId
 
 5. Webhook for Payment Updates
-POST /api/payment/webhook
+POST /api/webhook
 
 6. Health Check
-GET /api/payment/health
+GET /api/health
 Response:
 {
   "message": "PayWay service is running",
