@@ -40,9 +40,15 @@ Create a .env file in the root directory:
 PORT=3000
 MONGODB_URI=mongodb://localhost:27017/your_db_name
 REDIS_URL=redis://localhost:6379
-BAKONG_API_URL=https://api-sandbox.bakong.nbc.gov.kh/v1
-BAKONG_API_KEY=your_api_key
-BAKONG_MERCHANT_ID=your_merchant_id
+
+# ABA Sandbox
+ABA_MERCHANT_ID=ec461107
+ABA_PUBLIC_KEY=b32b3e9f683983664ef9d1a748f806ee877c62e2
+ABA_API_URL=https://checkout-sandbox.payway.com.kh/api/payment-gateway/v1/payments/purchase
+ABA_VERIFY_URL=https://checkout-sandbox.payway.com.kh/api/payment-gateway/v1/payments/check-transaction
+ABA_QR_API_URL=https://checkout-sandbox.payway.com.kh/api/payment-gateway/v1/payments/qr-code
+NODE_ENV=development
+
 
 Note: Do NOT commit your .env file. Add it to .gitignore for security.
 
